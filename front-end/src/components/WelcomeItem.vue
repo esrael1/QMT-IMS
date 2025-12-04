@@ -17,6 +17,8 @@
   margin-top: 2rem;
   display: flex;
   position: relative;
+  gap: 1rem;
+
 }
 
 .details {
