@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
+use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,11 +25,19 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure role_id and warehouse_id exist
+        $role = Role::inRandomOrder()->first();
+        $warehouse = Warehouse::inRandomOrder()->first();
+
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'role_id' => $role ? $role->id : Role::factory(),
+            'warehouse_id' => $warehouse ? $warehouse->id : Warehouse::factory(),
+            'full_name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'phone' => $this->faker->unique()->phoneNumber(),
+            'status' => $this->faker->randomElement(['active', 'inactive', 'suspended']),
+            'password' => Hash::make('password'), // default password
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
     }
@@ -37,7 +47,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

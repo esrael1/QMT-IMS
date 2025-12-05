@@ -18,8 +18,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'role_id',
+        'warehouse_id',
+        'full_name',
         'email',
+        'phone',
+        'status',
         'password',
     ];
 
@@ -44,5 +48,22 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    // User belongs to Warehouse
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
+
+    public function suppliers()
+    {
+        return $this->hasMany(Supplier::class);
     }
 }
