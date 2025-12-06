@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
+use App\Models\Supplier;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +20,17 @@ class StockinFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => User::query()->inRandomOrder()->value('id')
+                ?? User::factory()->create()->id,
+
+            'product_id' => Product::query()->inRandomOrder()->value('id')
+                ?? Product::factory()->create()->id,
+
+            'supplier_id' => Supplier::query()->inRandomOrder()->value('id')
+                ?? Supplier::factory()->create()->id,
+
+            'quantity' => $this->faker->randomFloat(2, 1, 500), // 1–500 units
+            'reason' => $this->faker->sentence(10),
         ];
     }
 }
